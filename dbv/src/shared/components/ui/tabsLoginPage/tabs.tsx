@@ -20,11 +20,15 @@ import {
 } from "lucide-react";
 import { LoginForm } from "../login/loginForm";
 import { CreateForm } from "../createLogin/createForm";
+import CalendarLogin from "../../calendar/calendarLogin";
 
 export function TabsLogin() {
   return (
-    <Tabs defaultValue="settings" className="w-full max-w-md">
-      <TabsList>
+    <Tabs
+      defaultValue="settings"
+      className="w-full max-w-sm sm:max-w-md md:max-w-lg"
+    >
+      <TabsList className="grid w-full grid-cols-4">
         <TabsTrigger value="medals">
           <MedalIcon />
           Medalhas
@@ -34,7 +38,7 @@ export function TabsLogin() {
         </TabsTrigger>
         <TabsTrigger value="createLogin">
           <UserPlusIcon />
-          Primeiro Acesso
+          1º Acesso
         </TabsTrigger>
         <TabsTrigger value="calendar">
           <CalendarRangeIcon />
@@ -48,6 +52,10 @@ export function TabsLogin() {
 
       <TabsContent value="createLogin">
         <CreateForm />
+      </TabsContent>
+
+      <TabsContent value="calendar">
+        <CalendarLogin />
       </TabsContent>
     </Tabs>
   );

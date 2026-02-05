@@ -2,7 +2,7 @@ import { TabsLogin } from "@/shared/components/ui/tabsLoginPage/tabs";
 
 export default function LoginPage() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="flex min-h-screen items-center justify-center px-4">
       <TabsLogin />
     </div>
   );
