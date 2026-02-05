@@ -23,10 +23,17 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
+  permission    Int       @default(4)
+  //1 - admin total
+  //2 - diretor
+  //3 - conselheiro
+  //4 - membro
 
-  clubId        String?
+  clubId  String?
+  members Member?
 
-  club           Club?     @relation(fields: [clubId], references: [id])
+  club Club? @relation(fields: [clubId], references: [id])
+
   @@unique([email])
   @@map("user")
 }
@@ -76,12 +83,49 @@ model Verification {
   @@map("verification")
 }
 
-
 model Club {
-  id      String   @id @default(cuid())
-  name    String
-  image   String?
+  id    String  @id @default(cuid())
+  name  String
+  image String?
 
   users   User[]
+  units   Unit[]
+  members Member[]
+}
 
+model Unit {
+  id     String  @id @default(cuid())
+  name   String
+  image  String?
+  clubId String
+
+  members Member[]
+  points  Point[]
+  club    Club     @relation(fields: [clubId], references: [id])
+}
+
+model Member {
+  id        String    @id @default(cuid())
+  birthDate DateTime?
+  active    Boolean   @default(true)
+  userId    String    @unique
+  clubId    String
+  unitId    String?
+  Points    Point[]
+
+  user User  @relation(fields: [userId], references: [id])
+  club Club  @relation(fields: [clubId], references: [id])
+  unit Unit? @relation(fields: [unitId], references: [id])
+}
+
+model Point {
+  id String @id @default(cuid())
+  value String
+  reason String?
+
+  unitId String?
+  memberId String?
+
+  unit Unit? @relation(fields: [unitId], references: [id])
+  member Member? @relation(fields: [memberId], references: [id])
 }
