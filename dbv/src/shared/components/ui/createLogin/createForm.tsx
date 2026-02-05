@@ -32,18 +32,12 @@ export function CreateForm({
   const handleSignIn = async (event:any) => {
     event.preventDefault();
     const form = new FormData(event.currentTarget);
-    console.log(form.get("email"), form.get("password"));
-    // if ((form.get("password") as string).length < 8) {
-    //   toast.error("A senha deve ter pelo menos 8 caracteres!", {position: "top-center", richColors: true});
-    //   return;
-    // }
     setLoading(true);
     const formData = new FormData(event.currentTarget);
     const email = formData.get("email")?.toString() || "";
     const password = formData.get("password")?.toString() || "";
     const name = formData.get("name")?.toString() || "" ;
     const image = formData.get("image")?.toString() || "";
-    console.log(formData.get("email"), formData.get("password"));
 
     const { data, error } = await authClient.signUp.email(
       {
@@ -65,7 +59,6 @@ export function CreateForm({
         },
         onError: (ctx: any) => {
           setLoading(false);
-          console.log(ctx.error.message);
           // alert(ctx.error.message);
           const error = ctx.error.message;
           let messageErro = ""

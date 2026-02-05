@@ -33,7 +33,6 @@ export function LoginForm({
     const form = new FormData(event.currentTarget);
     const email = form.get("email")?.toString() || "";
     const password = form.get("password")?.toString() || "";
-    console.log(form.get("email"), form.get("password"));
 
     const { data, error } = await authClient.signIn.email(
       {
@@ -45,7 +44,6 @@ export function LoginForm({
       {
         onError: (ctx: any) => {
           setLoading(false);
-          console.log(ctx.error.message);
           // alert(ctx.error.message);
           const error = ctx.error.message;
           toast.error("Erro ao inicar Sessão!");
