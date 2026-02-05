@@ -1,10 +1,7 @@
-"use server"
+"use client"
 
-import { prisma } from "../shared/lib/prisma"
-import HomeClient from "./page_client"
+import { redirect } from "next/navigation"
 
-export default async function Home(){
-  const users = await prisma.user.findMany()
-  console.log(users)
-  return <HomeClient />
+export default function HomeRedirect(){
+  redirect("/login")
 }
