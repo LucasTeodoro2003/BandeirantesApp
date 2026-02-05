@@ -1,5 +1,3 @@
-"use client"
-
 import { SkeletonCard } from "@/features/skeletons/skeletonCard"
 
 export default function Loading() {

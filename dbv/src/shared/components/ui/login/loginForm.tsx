@@ -20,12 +20,14 @@ import { useState } from "react";
 import { Toaster } from "../sonner";
 import { toast } from "sonner";
 import { Spinner } from "../spinner";
+import { useRouter } from "next/navigation";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {
   const [loading, setLoading] = useState(false);
+  const router = useRouter()
 
   const handleSignIn = async (event: any) => {
     event.preventDefault();
@@ -38,7 +40,6 @@ export function LoginForm({
       {
         email,
         password,
-        callbackURL: "/dbv",
         rememberMe: false,
       },
       {
@@ -48,6 +49,9 @@ export function LoginForm({
           const error = ctx.error.message;
           toast.error("Erro ao inicar Sessão!");
         },
+        onSuccess: (ctx: any) => {
+          router.push(`/${ctx.data?.user?.clubId}`)
+        }
         //callbacks
       },
     );
