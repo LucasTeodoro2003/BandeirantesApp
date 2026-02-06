@@ -12,13 +12,27 @@ export default async function ClubPage() {
   if (!session) {
     redirect("/login");
   }
-  const user = await prisma.user.findUnique({
+  const member = await prisma.member.findFirst({
+    where: {
+      userId: session.user.id,
+    },
+  });
+
+  if (!member) {
+    redirect(`/waiting`);
+  }
+
+  const user = (await prisma.user.findUnique({
     where: {
       id: session.user.id,
     },
-  }) as User
+  })) as User;
 
-  const units = await prisma.unit.findMany()
+  const units = await prisma.unit.findMany({
+    where: {
+      clubId: session.user.clubId,
+    },
+  });
 
-  return <ClubPageClient units={units} user={user}/>;
+  return <ClubPageClient units={units} user={user} />;
 }
