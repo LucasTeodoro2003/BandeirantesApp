@@ -46,6 +46,16 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
+.bandeirantes-gradient{
+  background: linear-gradient(
+    135deg,
+    #0b2a4a 0%,
+    #0f5fa8 40%,
+    #1fb6d5 70%
+    #f28c28 100%
+  )
+}
+
 :root {
   --radius: 0.625rem;
   --background: oklch(1 0 0);

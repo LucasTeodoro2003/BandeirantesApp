@@ -28,6 +28,10 @@ export default async function ClubPage() {
     },
   })) as User;
 
+  if(user.permission >= 3){
+    redirect(`/${session.user.clubId}/${member.unitId}`);
+  }
+
   const units = await prisma.unit.findMany({
     where: {
       clubId: session.user.clubId,

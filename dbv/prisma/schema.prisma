@@ -23,11 +23,13 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
-  permission    Int       @default(4)
-  //1 - admin total
-  //2 - diretor
+  permission    Int       @default(5)
+  //0 - super admin
+  //1 - diretor geral
+  //2 - tesoureiro / secretario
   //3 - conselheiro
-  //4 - membro
+  //4 - conselheiro adjunto
+  //5 - membro
 
   clubId  String?
   members Member?
