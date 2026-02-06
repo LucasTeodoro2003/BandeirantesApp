@@ -29,14 +29,14 @@ export function TabsLogin() {
       className="w-full max-w-sm sm:max-w-md md:max-w-lg"
     >
       <TabsList className="grid w-full grid-cols-4">
-        <TabsTrigger value="medals">
+        <TabsTrigger value="medals" >
           <MedalIcon />
           Medalhas
         </TabsTrigger>
         <TabsTrigger value="login">
           <FingerprintIcon /> Login
         </TabsTrigger>
-        <TabsTrigger value="createLogin">
+        <TabsTrigger value="createLogin" className="flex items-center justify-center">
           <UserPlusIcon />
           1º Acesso
         </TabsTrigger>
