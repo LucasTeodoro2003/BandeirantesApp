@@ -1,7 +1,6 @@
 import { betterAuth, string } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { prisma } from './prisma'
-import { emailOTP } from 'better-auth/plugins'
 
 const isDevelopment = process.env.NODE_ENV === "development"
 
@@ -31,16 +30,5 @@ export const auth = betterAuth({
     ]
     : [process.env.BETTER_AUTH_URL || "https://seu-dominio.com"],
   plugins: [
-    emailOTP({
-      async sendVerificationOTP({ email, otp, type }) {
-        if (type === "sign-in") {
-          // Send the OTP for sign in
-        } else if (type === "email-verification") {
-          // Send the OTP for email verification
-        } else {
-          // Send the OTP for password reset
-        }
-      },
-    })
   ]
 })
