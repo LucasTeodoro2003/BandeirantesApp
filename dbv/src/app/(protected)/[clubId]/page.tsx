@@ -3,7 +3,7 @@ import { prisma } from "@/shared/lib/prisma";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import ClubPageClient from "./page_client";
-import { User } from "../../../../generated/prisma/client";
+import { Club, User } from "../../../../generated/prisma/client";
 
 export default async function ClubPage() {
   const session = await auth.api.getSession({
@@ -28,6 +28,12 @@ export default async function ClubPage() {
     },
   })) as User;
 
+  const club = await prisma.club.findUnique({
+    where: {
+      id: session.user.clubId,
+    },
+  }) as Club
+
   if(user.permission >= 3){
     redirect(`/${session.user.clubId}/${member.unitId}`);
   }
@@ -38,5 +44,5 @@ export default async function ClubPage() {
     },
   });
 
-  return <ClubPageClient units={units} user={user} />;
+  return <ClubPageClient units={units} user={user} club={club} />;
 }
