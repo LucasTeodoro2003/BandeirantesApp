@@ -113,6 +113,11 @@ model Member {
   userId    String    @unique
   clubId    String
   unitId    String?
+  permission Int       @default(3)
+  //capitao - 1
+  //secretario - 2
+  //membro - 3
+
   Points    Point[]
 
   user User  @relation(fields: [userId], references: [id])

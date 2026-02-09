@@ -3,7 +3,7 @@
 import { Button } from "@/shared/components/ui/button";
 import { authClient } from "@/shared/lib/auth-client";
 import { useRouter } from "next/navigation";
-import { Club, Unit, User } from "../../../../generated/prisma/client";
+import { Club, Prisma, Unit, User } from "../../../../generated/prisma/client";
 import { CardUnit } from "@/features/cardUnits/cardUnit";
 import { Switch } from "@/shared/components/ui/switch";
 import { useTheme } from "next-themes";
@@ -13,7 +13,7 @@ import { type Container, type ISourceOptions } from "@tsparticles/engine";
 import { loadSlim } from "@tsparticles/slim";
 
 interface ClubPageClientProps {
-  units: Unit[];
+  units: Prisma.UnitGetPayload<{include:{members: {include:{user: true}}}}>[];
   user: User;
   club: Club;
 }

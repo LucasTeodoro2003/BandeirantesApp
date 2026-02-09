@@ -1,3 +1,4 @@
+"use server";
 import { auth } from "@/shared/lib/auth";
 import { prisma } from "@/shared/lib/prisma";
 import { headers } from "next/headers";
@@ -28,19 +29,26 @@ export default async function ClubPage() {
     },
   })) as User;
 
-  const club = await prisma.club.findUnique({
+  const club = (await prisma.club.findUnique({
     where: {
       id: session.user.clubId,
     },
-  }) as Club
+  })) as Club;
 
-  if(user.permission >= 3){
+  if (user.permission >= 3) {
     redirect(`/${session.user.clubId}/${member.unitId}`);
   }
 
   const units = await prisma.unit.findMany({
     where: {
       clubId: session.user.clubId,
+    },
+    include: {
+      members: {
+        include: {
+          user: true,
+        },
+      },
     },
   });
 
