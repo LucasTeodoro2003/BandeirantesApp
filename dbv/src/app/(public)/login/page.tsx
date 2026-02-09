@@ -1,9 +1,16 @@
-import { TabsLogin } from "@/shared/components/ui/tabsLoginPage/tabs";
+import { auth } from "@/shared/lib/auth";
+import { headers } from "next/headers";
+import LoginPageClient from "./page_client";
+import { redirect } from "next/navigation";
 
-export default function LoginPage() {
-  return (
-    <div className="flex min-h-screen items-center justify-center px-2">
-      <TabsLogin />
-    </div>
-  );
+export default async function LoginPage(){
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  })
+
+  if(session){
+    redirect(`/${session.user.clubId}`)
+  }
+
+  return <LoginPageClient />
 }
