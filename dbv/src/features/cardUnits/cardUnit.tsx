@@ -33,7 +33,7 @@ export function CardUnit({ units }: CardUnitProps) {
   };
   return (
     <Suspense fallback={<SkeletonCard />}>
-      <div className="grid gap-6 sm:grid-cols-12 lg:grid-cols-6">
+      <div className="grid gap-2 grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
         {units.map((u) => (
           <Card
             key={u.id}
@@ -45,15 +45,12 @@ export function CardUnit({ units }: CardUnitProps) {
               alt={`Foto Unidade ${u.name}`}
               className="relative z-20 aspect-video w-full object-cover brightness-60 grayscale dark:brightness-40 rounded-t-3xl"
             />
-            <CardHeader className="flex flex-col">
-              <CardAction className="flex">
-                <CardTitle className="flex items-center gap-2 justify-center">
-                  <div>{u.name}</div>
-                  <Badge
-                    variant={u.members.length === 0 ? "destructive" : "default"}
-                  >
-                    {u.members.length} Membros
-                  </Badge>
+            <CardHeader className="flex flex-col items-center justify-center w-full">
+              <CardAction className="flex items-center justify-center w-full">
+                <CardTitle className="flex items-center justify-center w-full">
+                  <div className="flex items-center justify-center w-full text-center">
+                    {u.name}
+                  </div>
                 </CardTitle>
               </CardAction>
               <Separator className="my-4 -mt-1" />
@@ -85,6 +82,13 @@ export function CardUnit({ units }: CardUnitProps) {
                       </div>
                     </div>
                   ))}
+              </div>
+              <div className="mt-1">
+                <Badge
+                  variant={u.members.length === 0 ? "destructive" : "default"}
+                >
+                  {u.members.length} Membros
+                </Badge>
               </div>
               <Button
                 className="w-full mt-4"
