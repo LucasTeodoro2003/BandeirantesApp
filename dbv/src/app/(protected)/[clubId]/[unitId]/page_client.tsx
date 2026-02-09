@@ -1,32 +1,14 @@
 "use client";
 
-import { Button } from "@/shared/components/ui/button";
-import { authClient } from "@/shared/lib/auth-client";
-import { useRouter } from "next/navigation";
-import { Club, Prisma, User } from "../../../../generated/prisma/client";
-import { CardUnit } from "@/features/cardUnits/cardUnit";
 import { Switch } from "@/shared/components/ui/switch";
+import { MenubarIconsUnit } from "@/shared/components/ui/unit/menuUnits";
+import { ISourceOptions } from "@tsparticles/engine";
+import Particles, { initParticlesEngine } from "@tsparticles/react";
+import { loadSlim } from "@tsparticles/slim";
 import { useTheme } from "next-themes";
 import { useEffect, useMemo, useState } from "react";
-import Particles, { initParticlesEngine } from "@tsparticles/react";
-import { type ISourceOptions } from "@tsparticles/engine";
-import { loadSlim } from "@tsparticles/slim";
-import { MenubarIcons } from "@/shared/components/ui/login/menuBarIcons";
 
-interface ClubPageClientProps {
-  units: Prisma.UnitGetPayload<{
-    include: { members: { include: { user: true } } };
-  }>[];
-  user: User;
-  club: Club;
-}
-
-export default function ClubPageClient({
-  units,
-  user,
-  club,
-}: ClubPageClientProps) {
-  const router = useRouter();
+export default function UnitPageClient() {
   const { theme, setTheme } = useTheme();
   const [init, setInit] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -606,11 +588,6 @@ export default function ClubPageClient({
     [currentTheme],
   );
 
-  const handleSignOut = async () => {
-    await authClient.signOut();
-    router.replace("/");
-  };
-
   return (
     <div className="relative min-h-screen">
       {init && mounted && theme && theme !== "system" && (
@@ -622,29 +599,9 @@ export default function ClubPageClient({
           />
         </div>
       )}
-
-      <div className="flex justify-between p-1.5 w-full items-center">
-        <div className="flex justify-start p-1.5">
-          {/* <Button
-            variant="ghost"
-            onClick={handleSignOut}
-            className="bandeirantes-gradient text-white"
-          >
-            Sair
-          </Button> */}
-          <MenubarIcons />
-        </div>
-        <div className="flex justify-between items-center">
-          <div>
-            <img
-              src={club.image || "/bandeirantes.png"}
-              alt={club.name}
-              className="w-8 sm:w-12 h-auto object-cover"
-            />
-          </div>
-          <div className="text-xl sm:text-3xl dark:text-white text-black font-medium ml-1.5">
-            {club.name}
-          </div>
+      <div className="flex justify-between items-center mt-2">
+        <div className="ml-2">
+          <MenubarIconsUnit />
         </div>
         <div className="flex justify-end items-center mr-4">
           <Switch
@@ -655,9 +612,6 @@ export default function ClubPageClient({
             size="default"
           />
         </div>
-      </div>
-      <div className="flex justify-center items-center pt-10">
-        <CardUnit units={units} />
       </div>
     </div>
   );
