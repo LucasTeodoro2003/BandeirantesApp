@@ -25,7 +25,7 @@ interface TabsLoginProps {
 export function TabsLogin({ units, members }: TabsLoginProps) {
   return (
     <Tabs
-      defaultValue="settings"
+      defaultValue="medals"
       className="w-full max-w-sm sm:max-w-md md:max-w-lg"
     >
       <TabsList className="grid w-full grid-cols-4">

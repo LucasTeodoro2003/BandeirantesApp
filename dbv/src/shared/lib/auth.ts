@@ -31,6 +31,6 @@ export const auth = betterAuth({
         "http://localhost:3000",
         "https://*.app.github.dev", // Aceita qualquer URL do Codespaces
       ]
-    : [process.env.BETTER_AUTH_URL || "https://seu-dominio.com"],
+    : [process.env.BETTER_AUTH_URL || "https://bandeirantes.vercel.app"],
   plugins: [],
 });

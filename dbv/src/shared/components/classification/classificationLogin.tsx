@@ -86,8 +86,6 @@ export function ClassificationLogin({
 }: ClassificationProps) {
   const [selectedTab, setSelectedTab] = useState<"units" | "members">("units");
 
-  console.log("Membros: ", members);
-
   const calculateUnitPointsDetailed = (unit: UnitWithPoints) => {
     const unitPoints = unit.PointsUnit.reduce(
       (acc, point) => acc + Number(point.value),
@@ -134,7 +132,6 @@ export function ClassificationLogin({
     };
   };
 
-  // Ordena membros pela pontuação final
   const sortedMembers = [...members]
     .filter((m) => m.active)
     .sort((a, b) => {
@@ -571,7 +568,6 @@ export function ClassificationLogin({
                                       </Tooltip>
                                     </TooltipProvider>
 
-                                    {/* Badge secundário com fórmula */}
                                     <div className="flex gap-1 items-center text-[10px] text-muted-foreground">
                                       <Badge
                                         variant="outline"

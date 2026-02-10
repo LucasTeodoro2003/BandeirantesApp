@@ -42,10 +42,9 @@ export function CreateForm({
     const { data, error } = await authClient.signUp.email(
       {
         email,
-        password, // user password -> min 8 characters by default
+        password, // user password -> min 8 characters
         name,
         image,
-        callbackURL: "/dbv", // A URL to redirect to after the user verifies their email (optional)
       },
       {
         onRequest: (ctx: any) => {
@@ -55,7 +54,6 @@ export function CreateForm({
           toast.success("Criado com sucesso");
           router.replace("/")
           setLoading(false);
-          //redirect to the dashboard or sign in page
         },
         onError: (ctx: any) => {
           setLoading(false);
