@@ -19,7 +19,11 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-export function MenubarIcons() {
+interface MenubarIconsProps {
+  setOpenMember: (open: boolean) => void;
+}
+
+export function MenubarIcons({ setOpenMember }: MenubarIconsProps) {
   const handleSignOut = async () => {
     const router = useRouter();
     await authClient.signOut();
@@ -50,7 +54,7 @@ export function MenubarIcons() {
               <CircleFadingPlusIcon />
               Unidades
             </MenubarItem>
-            <MenubarItem>
+            <MenubarItem onClick={() => setOpenMember(true)}>
               <UserRoundPlusIcon />
               Membros
             </MenubarItem>

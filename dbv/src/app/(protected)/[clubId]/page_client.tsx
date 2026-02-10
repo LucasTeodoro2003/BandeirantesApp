@@ -12,6 +12,7 @@ import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { type ISourceOptions } from "@tsparticles/engine";
 import { loadSlim } from "@tsparticles/slim";
 import { MenubarIcons } from "@/shared/components/ui/login/menuBarIcons";
+import CreateMember from "@/shared/components/createMember/createMember";
 
 interface ClubPageClientProps {
   units: Prisma.UnitGetPayload<{
@@ -606,10 +607,7 @@ export default function ClubPageClient({
     [currentTheme],
   );
 
-  const handleSignOut = async () => {
-    await authClient.signOut();
-    router.replace("/");
-  };
+  const [openMember, setOpenMember] = useState(false);
 
   return (
     <div className="relative min-h-screen">
@@ -625,14 +623,7 @@ export default function ClubPageClient({
 
       <div className="flex justify-between p-1.5 w-full items-center">
         <div className="flex justify-start p-1.5">
-          {/* <Button
-            variant="ghost"
-            onClick={handleSignOut}
-            className="bandeirantes-gradient text-white"
-          >
-            Sair
-          </Button> */}
-          <MenubarIcons />
+          <MenubarIcons setOpenMember={setOpenMember} />
         </div>
         <div className="flex justify-between items-center">
           <div>
@@ -656,6 +647,7 @@ export default function ClubPageClient({
           />
         </div>
       </div>
+      <CreateMember open={openMember} setOpen={setOpenMember} />
       <div className="flex justify-center items-center pt-10">
         <CardUnit units={units} />
       </div>
