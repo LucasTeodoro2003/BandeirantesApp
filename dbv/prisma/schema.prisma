@@ -99,7 +99,7 @@ model Member {
   club         Club      @relation(fields: [clubId], references: [id])
   unit         Unit?     @relation(fields: [unitId], references: [id])
   user         User      @relation(fields: [userId], references: [id])
-  PointsMember Point[] @relation("MemberPoints")
+  PointsMember Point[]   @relation("MemberPoints")
 }
 
 model Point {
@@ -109,5 +109,5 @@ model Point {
   unitId   String?
   memberId String?
   member   Member? @relation("MemberPoints", fields: [memberId], references: [id])
-  unit     Unit?   @relation("UnitPoints", fields: [unitId], references: [id]) 
+  unit     Unit?   @relation("UnitPoints", fields: [unitId], references: [id])
 }
