@@ -1,4 +1,5 @@
 "use server"
+import { revalidatePath } from "next/cache";
 import { prisma } from "./prisma";
 
 export default async function UpdateOrCreateMember(member: FormData) {
@@ -16,7 +17,9 @@ export default async function UpdateOrCreateMember(member: FormData) {
                 clubId: member.get("clubId")?.toString() || "",
             }
         })
+        revalidatePath("/")
     } catch (error) {
         console.error("Erro ao criar membro:", error);
+        throw new Error("Erro ao criar membro. Tente novamente.");
     }
 }

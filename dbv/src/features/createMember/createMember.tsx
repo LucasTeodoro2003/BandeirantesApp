@@ -10,13 +10,14 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "../../shared/components/ui/drawer";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "../../shared/components/ui/select";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../../shared/components/ui/select";
 import { Field, FieldContent, FieldGroup, FieldLabel } from "../../shared/components/ui/field";
 import { Switch } from "../../shared/components/ui/switch";
 import { Member, User } from "../../../generated/prisma/client";
 import { Toaster } from "../../shared/components/ui/sonner";
 import { toast } from "sonner";
 import UpdateOrCreateMember from "@/shared/lib/member";
+import { Spinner } from "@/shared/components/ui/spinner";
 
 interface CreateMemberProps {
   open: boolean;
@@ -32,6 +33,10 @@ export default function CreateMember({ open, setOpen, users, members, user }: Cr
   const [openActiveMember, setOpenActiveMember] = useState(false)
   const [selectedMember, setSelectedMember] = useState<Member | null>(null)
   const [activeMember, setActiveMember] = useState(members.find((m) => m.userId === selectedUser)?.active || false)
+  const [loading, setLoading] = useState(false)
+
+  const usersWithMembership = users.filter(u => members.some(m => m.userId === u.id));
+  const usersWithoutMembership = users.filter(u => !members.some(m => m.userId === u.id));
 
   const handleSelectUser = (userId: string) => {
     setSelectedUser(userId);
@@ -39,7 +44,6 @@ export default function CreateMember({ open, setOpen, users, members, user }: Cr
     const member = members.find((m) => m.userId === userId) || null;
     setSelectedMember(member);
     setActiveMember(member ? member.active : false);
-
   }
 
   const closedModal = () => {
@@ -49,6 +53,7 @@ export default function CreateMember({ open, setOpen, users, members, user }: Cr
   }
 
   const handleSave = async () => {
+    setLoading(true);
     try {
       const formMember = new FormData()
       formMember.append("userId", selectedUser)
@@ -56,13 +61,15 @@ export default function CreateMember({ open, setOpen, users, members, user }: Cr
       formMember.append("id", selectedMember?.id || "")
       formMember.append("clubId", user.clubId || "")
       await UpdateOrCreateMember(formMember)
+      toast.success("Membro salvo com sucesso!");
     } catch (error) {
       console.error("Erro ao criar membro:", error);
       toast.error("Erro ao criar membro. Tente novamente.");
+      setLoading(false);
       return;
     }
-    toast.success("Membro salvo com sucesso!");
     closedModal();
+    setLoading(false);
   }
 
   return (
@@ -81,11 +88,26 @@ export default function CreateMember({ open, setOpen, users, members, user }: Cr
                   <SelectValue placeholder="Selecione um usuário" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectGroup>
-                    {users?.map((u) => (
-                      <SelectItem key={u.id} value={u.id} onSelect={() => { handleSelectUser(u.id) }}>{u.name ? u.name : u.email}</SelectItem>
-                    ))}
-                  </SelectGroup>
+                  {usersWithMembership.length > 0 && (
+                    <SelectGroup>
+                      <SelectLabel className="text-red-400 font-bold text-center">Membros</SelectLabel>
+                      {usersWithMembership.map((u) => (
+                        <SelectItem key={u.id} value={u.id}>
+                          {u.name ? u.name : u.email}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  )}
+                  {usersWithoutMembership.length > 0 && (
+                    <SelectGroup>
+                      <SelectLabel className="text-red-400 font-bold text-center">Não Membros</SelectLabel>
+                      {usersWithoutMembership.map((u) => (
+                        <SelectItem key={u.id} value={u.id}>
+                          {u.name ? u.name : u.email}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  )}
                 </SelectContent>
               </Select>
             </Field>
@@ -105,7 +127,7 @@ export default function CreateMember({ open, setOpen, users, members, user }: Cr
           </FieldGroup>
         </div>
         <DrawerFooter>
-          <Button onClick={handleSave} disabled={!selectedUser}>Salvar</Button>
+          <Button onClick={handleSave} disabled={!selectedUser || loading}>{loading ? <Spinner /> : "Salvar"}</Button>
           <DrawerClose asChild>
             <Button variant="outline" onClick={closedModal}>Fechar</Button>
           </DrawerClose>
