@@ -1,5 +1,6 @@
 "use client";
 
+import { ClassificationUnit } from "@/shared/components/classification/classificationUnit";
 import { Switch } from "@/shared/components/ui/switch";
 import { MenubarIconsUnit } from "@/shared/components/ui/unit/menuUnits";
 import { ISourceOptions } from "@tsparticles/engine";
@@ -612,6 +613,9 @@ export default function UnitPageClient() {
             size="default"
           />
         </div>
+      </div>
+      <div className="flex justify-center items-center mt-4 mx-2">
+        <ClassificationUnit />
       </div>
     </div>
   );

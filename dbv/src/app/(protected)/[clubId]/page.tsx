@@ -29,7 +29,7 @@ export default async function ClubPage() {
     },
   })) as User;
 
-  const club = (await prisma.club.findUnique({
+  const club = (await prisma.club.findFirst({
     where: {
       id: session.user.clubId,
     },
