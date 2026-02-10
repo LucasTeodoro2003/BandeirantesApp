@@ -1,11 +1,4 @@
-"use client";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/shared/components/ui/card";
+"use client"
 import {
   Tabs,
   TabsContent,
@@ -21,8 +14,15 @@ import {
 import { LoginForm } from "../login/loginForm";
 import { CreateForm } from "../createLogin/createForm";
 import CalendarLogin from "../../calendar/calendarLogin";
+import { ClassificationLogin } from "../../classification/classificationLogin";
+import { Prisma } from "../../../../../generated/prisma/client";
 
-export function TabsLogin() {
+interface TabsLoginProps {
+  units: Prisma.UnitGetPayload<{include: {PointsUnit:true, members:{include:{user: true, PointsMember: true}}}}>[];
+  members: Prisma.MemberGetPayload<{include:{user:true, PointsMember: true, unit:{include:{PointsUnit:true, members:true}}}}>[],
+}
+
+export function TabsLogin({ units, members }: TabsLoginProps) {
   return (
     <Tabs
       defaultValue="settings"
@@ -36,13 +36,13 @@ export function TabsLogin() {
         <TabsTrigger value="login">
           <FingerprintIcon /> Login
         </TabsTrigger>
-        <TabsTrigger value="createLogin" className="flex items-center justify-center">
+        <TabsTrigger value="createLogin" className="flex items-center justify-center -ml-4">
           <UserPlusIcon />
-          1º Acesso
+          Cadastro
         </TabsTrigger>
         <TabsTrigger value="calendar">
           <CalendarRangeIcon />
-          Calendario
+          Calendário
         </TabsTrigger>
       </TabsList>
 
@@ -56,6 +56,10 @@ export function TabsLogin() {
 
       <TabsContent value="calendar">
         <CalendarLogin />
+      </TabsContent>
+
+      <TabsContent value="medals">
+        <ClassificationLogin units={units} members={members} />
       </TabsContent>
     </Tabs>
   );

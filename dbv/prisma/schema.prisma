@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../generated/prisma"
@@ -16,34 +10,25 @@ datasource db {
 model User {
   id            String    @id
   name          String
-  email         String
+  email         String    @unique
   emailVerified Boolean
   image         String?
   createdAt     DateTime
   updatedAt     DateTime
-  sessions      Session[]
-  accounts      Account[]
+  clubId        String?
   permission    Int       @default(5)
-  //0 - super admin
-  //1 - diretor geral
-  //2 - tesoureiro / secretario
-  //3 - conselheiro
-  //4 - conselheiro adjunto
-  //5 - membro
+  members       Member?
+  accounts      Account[]
+  sessions      Session[]
+  club          Club?     @relation(fields: [clubId], references: [id])
 
-  clubId  String?
-  members Member?
-
-  club Club? @relation(fields: [clubId], references: [id])
-
-  @@unique([email])
   @@map("user")
 }
 
 model Session {
   id        String   @id
   expiresAt DateTime
-  token     String
+  token     String   @unique
   createdAt DateTime
   updatedAt DateTime
   ipAddress String?
@@ -51,7 +36,6 @@ model Session {
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([token])
   @@map("session")
 }
 
@@ -60,7 +44,6 @@ model Account {
   accountId             String
   providerId            String
   userId                String
-  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   accessToken           String?
   refreshToken          String?
   idToken               String?
@@ -70,6 +53,7 @@ model Account {
   password              String?
   createdAt             DateTime
   updatedAt             DateTime
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("account")
 }
@@ -86,53 +70,44 @@ model Verification {
 }
 
 model Club {
-  id    String  @id @default(cuid())
-  name  String
-  image String?
-
-  users   User[]
-  units   Unit[]
+  id      String   @id @default(cuid())
+  name    String
+  image   String?
   members Member[]
+  units   Unit[]
+  users   User[]
 }
 
 model Unit {
-  id     String  @id @default(cuid())
-  name   String
-  image  String?
-  clubId String
-
-  members Member[]
-  points  Point[]
-  club    Club     @relation(fields: [clubId], references: [id])
+  id         String   @id @default(cuid())
+  name       String
+  image      String?
+  clubId     String
+  members    Member[]
+  PointsUnit Point[]  @relation("UnitPoints")
+  club       Club     @relation(fields: [clubId], references: [id])
 }
 
 model Member {
-  id        String    @id @default(cuid())
-  birthDate DateTime?
-  active    Boolean   @default(true)
-  userId    String    @unique
-  clubId    String
-  unitId    String?
-  permission Int       @default(3)
-  //capitao - 1
-  //secretario - 2
-  //membro - 3
-
-  Points    Point[]
-
-  user User  @relation(fields: [userId], references: [id])
-  club Club  @relation(fields: [clubId], references: [id])
-  unit Unit? @relation(fields: [unitId], references: [id])
+  id           String    @id @default(cuid())
+  birthDate    DateTime?
+  active       Boolean   @default(true)
+  userId       String    @unique
+  clubId       String
+  unitId       String?
+  permission   Int       @default(3)
+  club         Club      @relation(fields: [clubId], references: [id])
+  unit         Unit?     @relation(fields: [unitId], references: [id])
+  user         User      @relation(fields: [userId], references: [id])
+  PointsMember Point[] @relation("MemberPoints")
 }
 
 model Point {
-  id String @id @default(cuid())
-  value String
-  reason String?
-
-  unitId String?
+  id       String  @id @default(cuid())
+  value    String
+  reason   String?
+  unitId   String?
   memberId String?
-
-  unit Unit? @relation(fields: [unitId], references: [id])
-  member Member? @relation(fields: [memberId], references: [id])
+  member   Member? @relation("MemberPoints", fields: [memberId], references: [id])
+  unit     Unit?   @relation("UnitPoints", fields: [unitId], references: [id]) 
 }
