@@ -94,18 +94,9 @@ export function ClassificationLogin({
       0,
     );
 
-    const membersPoints = unit.members.reduce((memberAcc, member) => {
-      const memberTotal = member.PointsMember.reduce(
-        (pointAcc, point) => pointAcc + Number(point.value),
-        0,
-      );
-      return memberAcc + memberTotal;
-    }, 0);
-
     return {
       unitPoints,
-      membersPoints,
-      total: unitPoints + membersPoints,
+      total: unitPoints
     };
   };
 
@@ -388,15 +379,6 @@ export function ClassificationLogin({
                                         </div>
                                         <Separator />
                                         <div className="flex items-center justify-between gap-4">
-                                          <span className="text-xs text-muted-foreground">
-                                            Pontos dos Membros:
-                                          </span>
-                                          <span className="font-bold">
-                                            {pointsBreakdown.membersPoints}
-                                          </span>
-                                        </div>
-                                        <Separator />
-                                        <div className="flex items-center justify-between gap-4">
                                           <span className="text-xs font-bold">
                                             Total:
                                           </span>
@@ -407,22 +389,6 @@ export function ClassificationLogin({
                                       </TooltipContent>
                                     </Tooltip>
                                   </TooltipProvider>
-
-                                  {/* Badge secundário mostrando o breakdown */}
-                                  <div className="flex gap-1 text-xs">
-                                    <Badge
-                                      variant="outline"
-                                      className="text-[10px] px-1"
-                                    >
-                                      U: {pointsBreakdown.unitPoints}
-                                    </Badge>
-                                    <Badge
-                                      variant="outline"
-                                      className="text-[10px] px-1"
-                                    >
-                                      M: {pointsBreakdown.membersPoints}
-                                    </Badge>
-                                  </div>
                                 </div>
                               </TableCell>
                             </motion.tr>

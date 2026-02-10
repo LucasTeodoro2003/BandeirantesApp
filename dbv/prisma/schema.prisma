@@ -84,7 +84,7 @@ model Unit {
   image      String?
   clubId     String
   members    Member[]
-  PointsUnit Point[]  @relation("UnitPoints")
+  PointsUnit Point?[]  @relation("UnitPoints")
   club       Club     @relation(fields: [clubId], references: [id])
 }
 
