@@ -52,5 +52,14 @@ export default async function ClubPage() {
     },
   });
 
-  return <ClubPageClient units={units} user={user} club={club} />;
+  const users = await prisma.user.findMany({
+  })
+
+  const members = await prisma.member.findMany({
+    where: {
+      clubId: session.user.clubId,
+    },
+  })
+
+  return <ClubPageClient units={units} users={users} club={club} members={members} user={user} />;
 }

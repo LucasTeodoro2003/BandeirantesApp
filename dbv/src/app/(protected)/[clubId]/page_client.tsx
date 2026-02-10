@@ -3,7 +3,7 @@
 import { Button } from "@/shared/components/ui/button";
 import { authClient } from "@/shared/lib/auth-client";
 import { useRouter } from "next/navigation";
-import { Club, Prisma, User } from "../../../../generated/prisma/client";
+import { Club, Member, Prisma, User } from "../../../../generated/prisma/client";
 import { CardUnit } from "@/features/cardUnits/cardUnit";
 import { Switch } from "@/shared/components/ui/switch";
 import { useTheme } from "next-themes";
@@ -12,20 +12,24 @@ import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { type ISourceOptions } from "@tsparticles/engine";
 import { loadSlim } from "@tsparticles/slim";
 import { MenubarIcons } from "@/shared/components/ui/login/menuBarIcons";
-import CreateMember from "@/shared/components/createMember/createMember";
+import CreateMember from "@/features/createMember/createMember";
 
 interface ClubPageClientProps {
   units: Prisma.UnitGetPayload<{
     include: { members: { include: { user: true } } };
   }>[];
-  user: User;
+  users: User[];
   club: Club;
+  members: Member[]
+  user: User;
 }
 
 export default function ClubPageClient({
   units,
-  user,
+  users,
   club,
+  members,
+  user,
 }: ClubPageClientProps) {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
@@ -647,7 +651,7 @@ export default function ClubPageClient({
           />
         </div>
       </div>
-      <CreateMember open={openMember} setOpen={setOpenMember} />
+      <CreateMember open={openMember} setOpen={setOpenMember} users={users} members={members} user={user} />
       <div className="flex justify-center items-center pt-10">
         <CardUnit units={units} />
       </div>
