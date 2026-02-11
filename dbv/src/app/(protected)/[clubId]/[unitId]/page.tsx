@@ -4,31 +4,44 @@ import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { prisma } from "@/shared/lib/prisma";
 
-export default async function UnitPage() {
+interface UnitPageProps {
+  params: Promise<{
+    clubId: string;
+    unitId: string;
+  }>;
+}
+
+export default async function UnitPage({ params }: UnitPageProps) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
-
-  if(!session){
-    redirect("/login")
+  if (!session) {
+    redirect("/login");
   }
 
   const member = await prisma.member.findUnique({
     where: {
-        userId: session.user.id
-    }, include:{
-        user: true
-    }
-  })
-  if(!member){
-    redirect("/login")
+      userId: session.user.id,
+    },
+    include: {
+      user: true,
+    },
+  });
+  if (!member) {
+    redirect("/login");
+  }
+  if (member.clubId !== (await params).clubId) {
+    redirect(`/${member.clubId}`);
+  }
+  if (member.unitId !== (await params).unitId) {
+    redirect(`/${member.clubId}/${member.unitId}`);
   }
 
   const unit = await prisma.unit.findUnique({
     where: {
-        id: member.unitId || ""
-    }
-  })
+      id: member.unitId || "",
+    },
+  });
 
   return <UnitPageClient />;
 }

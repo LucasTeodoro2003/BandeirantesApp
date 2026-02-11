@@ -22,7 +22,7 @@ export default async function WaitingPage() {
     },
   });
 
-  if (member) {
+  if (member && member.unitId) {
     redirect(`/${member.user.clubId}`);
   }
 

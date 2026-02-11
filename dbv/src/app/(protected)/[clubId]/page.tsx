@@ -6,7 +6,13 @@ import { redirect } from "next/navigation";
 import ClubPageClient from "./page_client";
 import { Club, User } from "../../../../generated/prisma/client";
 
-export default async function ClubPage() {
+interface ClubPageProps {
+  params: Promise<{
+    clubId: string;
+  }>;
+}
+
+export default async function ClubPage({ params }: ClubPageProps) {
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -31,17 +37,23 @@ export default async function ClubPage() {
 
   const club = (await prisma.club.findFirst({
     where: {
-      id: session.user.clubId,
+      id: member.clubId,
     },
   })) as Club;
 
-  if (user.permission >= 3) {
-    redirect(`/${session.user.clubId}/${member.unitId}`);
+  if (user.permission >= 3 && member.unitId) {
+    redirect(`/${member.clubId}/${member.unitId}`);
+  } else if (user.permission >= 3 && !member.unitId) {
+    redirect(`/waitingUnit`);
+  }
+
+  if (member.clubId !== (await params).clubId) {
+    redirect(`/${member.clubId}`);
   }
 
   const units = await prisma.unit.findMany({
     where: {
-      clubId: session.user.clubId,
+      clubId: member.clubId,
     },
     include: {
       members: {
@@ -52,14 +64,21 @@ export default async function ClubPage() {
     },
   });
 
-  const users = await prisma.user.findMany({
-  })
+  const users = await prisma.user.findMany({});
 
   const members = await prisma.member.findMany({
     where: {
-      clubId: session.user.clubId,
+      clubId: member.clubId,
     },
-  })
+  });
 
-  return <ClubPageClient units={units} users={users} club={club} members={members} user={user} />;
+  return (
+    <ClubPageClient
+      units={units}
+      users={users}
+      club={club}
+      members={members}
+      user={user}
+    />
+  );
 }

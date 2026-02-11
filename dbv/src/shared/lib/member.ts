@@ -9,12 +9,14 @@ export default async function UpdateOrCreateMember(member: FormData) {
                 id: member.get("id")?.toString() || ""
             },
             update: {
-                active: member.get("active") === "true"
+                active: member.get("active") === "true",
+                unitId: member.get("unitId")?.toString() || "",
             },
             create: {
                 active: member.get("active") === "true",
                 userId: member.get("userId")?.toString() || "",
                 clubId: member.get("clubId")?.toString() || "",
+                unitId: member.get("unitId")?.toString() || "",
             }
         })
         revalidatePath("/")

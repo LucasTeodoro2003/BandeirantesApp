@@ -31,7 +31,6 @@ export default function ClubPageClient({
   members,
   user,
 }: ClubPageClientProps) {
-  const router = useRouter();
   const { theme, setTheme } = useTheme();
   const [init, setInit] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -651,7 +650,7 @@ export default function ClubPageClient({
           />
         </div>
       </div>
-      <CreateMember open={openMember} setOpen={setOpenMember} users={users} members={members} user={user} />
+      <CreateMember open={openMember} setOpen={setOpenMember} users={users} members={members} user={user} units={units} />
       <div className="flex justify-center items-center pt-10">
         <CardUnit units={units} />
       </div>
