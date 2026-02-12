@@ -22,6 +22,14 @@ model User {
   sessions      Session[]
   club          Club?     @relation(fields: [clubId], references: [id])
 
+  // 0- adminTotal
+  // 1 - diretora
+  // 2 - secretaria / tesoureiro
+  // 3 - conselheiro
+  // 4 - conselheiro associado
+  // 5 - membro
+
+
   @@map("user")
 }
 
@@ -100,6 +108,10 @@ model Member {
   unit         Unit?     @relation(fields: [unitId], references: [id])
   user         User      @relation(fields: [userId], references: [id])
   PointsMember Point[]   @relation("MemberPoints")
+
+  // 1 - capitão
+  // 2 - secretario
+  // 3 - membro
 }
 
 model Point {

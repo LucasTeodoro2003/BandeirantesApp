@@ -33,8 +33,11 @@ export default async function UnitPage({ params }: UnitPageProps) {
   if (member.clubId !== (await params).clubId) {
     redirect(`/${member.clubId}`);
   }
-  if (member.unitId !== (await params).unitId) {
-    redirect(`/${member.clubId}/${member.unitId}`);
+  if (member.unitId !== (await params).unitId && member.user.permission >= 3) {
+    redirect(`/${member.clubId}`);
+  }
+  if (!member.active) {
+    redirect(`/waiting`);
   }
 
   const unit = await prisma.unit.findUnique({
@@ -43,5 +46,22 @@ export default async function UnitPage({ params }: UnitPageProps) {
     },
   });
 
-  return <UnitPageClient />;
+  const members = await prisma.member.findMany({
+    where: {
+      unitId: (await params).unitId,
+      active: true,
+    },
+    include:{
+      user: true,
+      PointsMember: true,
+      unit:{
+        include:{
+          PointsUnit: true,
+          members: true
+        }
+      }
+    }
+  })
+
+  return <UnitPageClient members={members} />;
 }

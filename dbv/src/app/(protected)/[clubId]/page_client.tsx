@@ -1,8 +1,5 @@
 "use client";
 
-import { Button } from "@/shared/components/ui/button";
-import { authClient } from "@/shared/lib/auth-client";
-import { useRouter } from "next/navigation";
 import { Club, Member, Prisma, User } from "../../../../generated/prisma/client";
 import { CardUnit } from "@/features/cardUnits/cardUnit";
 import { Switch } from "@/shared/components/ui/switch";

@@ -8,8 +8,24 @@ import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
 import { useTheme } from "next-themes";
 import { useEffect, useMemo, useState } from "react";
+import { Prisma } from "../../../../../generated/prisma/client";
 
-export default function UnitPageClient() {
+interface UnitPageClientProps {
+  members: Prisma.MemberGetPayload<{
+    include: {
+      user: true;
+      PointsMember: true;
+      unit: {
+        include: {
+          PointsUnit: true;
+          members: true;
+        };
+      };
+    };
+  }>[];
+}
+
+export default function UnitPageClient({ members }: UnitPageClientProps) {
   const { theme, setTheme } = useTheme();
   const [init, setInit] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -615,7 +631,7 @@ export default function UnitPageClient() {
         </div>
       </div>
       <div className="flex justify-center items-center mt-4 mx-2">
-        <ClassificationUnit />
+        <ClassificationUnit members={members}/>
       </div>
     </div>
   );

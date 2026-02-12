@@ -51,12 +51,19 @@ export default async function ClubPage({ params }: ClubPageProps) {
     redirect(`/${member.clubId}`);
   }
 
+  if(!member.active){
+    redirect(`/waiting`);
+  }
+
   const units = await prisma.unit.findMany({
     where: {
       clubId: member.clubId,
     },
     include: {
       members: {
+        where:{
+          active: true
+        },
         include: {
           user: true,
         },
@@ -64,7 +71,11 @@ export default async function ClubPage({ params }: ClubPageProps) {
     },
   });
 
-  const users = await prisma.user.findMany({});
+  const users = await prisma.user.findMany({
+    where:{
+      clubId: user.clubId
+    }
+  });
 
   const members = await prisma.member.findMany({
     where: {

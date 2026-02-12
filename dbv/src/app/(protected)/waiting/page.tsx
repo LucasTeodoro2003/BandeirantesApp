@@ -4,6 +4,7 @@ import { prisma } from "@/shared/lib/prisma";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import WaitingPageClient from "./page_client";
+import { User } from "../../../../generated/prisma/client";
 
 export default async function WaitingPage() {
   const session = await auth.api.getSession({
@@ -22,9 +23,17 @@ export default async function WaitingPage() {
     },
   });
 
-  if (member) {
+  if (member && member.active) {
     redirect(`/${member.user.clubId}`);
   }
 
-  return <WaitingPageClient />;
+  const user = (await prisma.user.findUnique({
+    where: {
+      id: session?.user.id,
+    },
+  })) as User;
+
+  const clubs = await prisma.club.findMany();
+
+  return <WaitingPageClient user={user} clubs={clubs} />;
 }

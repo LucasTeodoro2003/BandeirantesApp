@@ -66,6 +66,7 @@ export default function CreateMember({
     selectedMember?.unitId || "",
   );
   const [isRotating, setIsRotating] = useState(false);
+  const [occupation, setOccupation] = useState("");
 
   const usersWithMembership = users.filter((u) =>
     members.some((m) => m.userId === u.id),
@@ -81,6 +82,9 @@ export default function CreateMember({
     setSelectedMember(member);
     setActiveMember(member ? member.active : false);
     setUnitSelect(member?.unitId || null);
+    setOccupation(
+      users.find((u) => u.id === userId)?.permission.toString() || "",
+    );
   };
 
   const closedModal = () => {
@@ -89,6 +93,7 @@ export default function CreateMember({
     setSelectedMember(null);
     setActiveMember(false);
     setUnitSelect("");
+    setOccupation("");
     setOpen(false);
   };
 
@@ -101,6 +106,7 @@ export default function CreateMember({
       formMember.append("id", selectedMember?.id || "");
       formMember.append("clubId", user.clubId || "");
       formMember.append("unitId", unitSelect || "");
+      formMember.append("occupation", occupation);
       await UpdateOrCreateMember(formMember);
       toast.success("Membro salvo com sucesso!");
     } catch (error) {
@@ -115,10 +121,10 @@ export default function CreateMember({
 
   const handleRefresh = async () => {
     setIsRotating(true);
-    try{
+    try {
       await updatePage();
       setIsRotating(false);
-    }catch(erro){
+    } catch (erro) {
       console.error("Erro ao atualizar a página:", erro);
       setIsRotating(false);
     }
@@ -143,7 +149,7 @@ export default function CreateMember({
             </div>
           </DrawerTitle>
           <DrawerDescription>
-            Preencha as informações para criar um novo membro.
+            Preencha as informações do membro
           </DrawerDescription>
         </DrawerHeader>
         <div className="no-scrollbar overflow-y-auto px-4">
@@ -187,19 +193,44 @@ export default function CreateMember({
               </Select>
             </Field>
             {openActiveMember && (
-              <Field orientation="horizontal" className="">
-                <FieldContent>
-                  <FieldLabel htmlFor="align-item" className="ml-2">
-                    Ativar Membro
-                  </FieldLabel>
-                </FieldContent>
-                <Switch
-                  id="align-item"
-                  checked={activeMember}
-                  onCheckedChange={(checked) => setActiveMember(checked)}
-                  className="mr-2"
-                />
-              </Field>
+              <>
+                <Field className="w-full max-w-xs -mt-6">
+                  <Select
+                    value={occupation || ""}
+                    onValueChange={(value) => setOccupation(value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione um cargo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectItem value="0">Admin Sistema</SelectItem>
+                        <SelectItem value="1">Diretor(a)</SelectItem>
+                        <SelectItem value="2">Secretario(a)</SelectItem>
+                        <SelectItem value="3">Conselheiro(a)</SelectItem>
+                        <SelectItem value="4">
+                          Conselheiro(a) Associado(a)
+                        </SelectItem>
+                        <SelectItem value="5">Membro</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </Field>
+
+                <Field orientation="horizontal" className="">
+                  <FieldContent>
+                    <FieldLabel htmlFor="align-item" className="ml-2">
+                      Ativar Membro
+                    </FieldLabel>
+                  </FieldContent>
+                  <Switch
+                    id="align-item"
+                    checked={activeMember}
+                    onCheckedChange={(checked) => setActiveMember(checked)}
+                    className="mr-2"
+                  />
+                </Field>
+              </>
             )}
           </FieldGroup>
 
@@ -214,6 +245,16 @@ export default function CreateMember({
                       setUnitSelect(value);
                     }}
                   >
+                    <FieldLabel>
+                      <Field orientation="horizontal" className="">
+                        <FieldContent>
+                          <FieldTitle className="text-red-500">
+                            Nenhuma
+                          </FieldTitle>
+                        </FieldContent>
+                        <RadioGroupItem value={""} id={""} />
+                      </Field>
+                    </FieldLabel>
                     {units.map((unit) => (
                       <FieldLabel htmlFor={unit.id} key={unit.id}>
                         <Field orientation="horizontal" className="">
