@@ -100,7 +100,7 @@ export default function CreateMember({
       setImagePreview(preview);
       const formData = new FormData();
       formData.append("image", compressedFile);
-      formData.append("userId", user.id);
+      formData.append("userId", selectedUser);
       const result = await updateUserAvatar(formData);
       if (result.success && result.url) {
         setImagePreview(result.url);
