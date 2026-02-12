@@ -62,7 +62,7 @@ export default async function ClubPage({ params }: ClubPageProps) {
     include: {
       members: {
         where:{
-          active: true
+          active: true,
         },
         include: {
           user: true,
@@ -73,7 +73,10 @@ export default async function ClubPage({ params }: ClubPageProps) {
 
   const users = await prisma.user.findMany({
     where:{
-      clubId: user.clubId
+      clubId: user.clubId,
+      permission: {
+        gte: 1,
+      },
     }
   });
 

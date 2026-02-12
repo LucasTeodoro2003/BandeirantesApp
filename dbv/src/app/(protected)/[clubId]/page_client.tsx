@@ -1,6 +1,11 @@
 "use client";
 
-import { Club, Member, Prisma, User } from "../../../../generated/prisma/client";
+import {
+  Club,
+  Member,
+  Prisma,
+  User,
+} from "../../../../generated/prisma/client";
 import { CardUnit } from "@/features/cardUnits/cardUnit";
 import { Switch } from "@/shared/components/ui/switch";
 import { useTheme } from "next-themes";
@@ -9,7 +14,7 @@ import Particles, { initParticlesEngine } from "@tsparticles/react";
 import { type ISourceOptions } from "@tsparticles/engine";
 import { loadSlim } from "@tsparticles/slim";
 import { MenubarIcons } from "@/shared/components/ui/login/menuBarIcons";
-import CreateMember from "@/features/createMember/createMember";
+import EdityMember from "@/features/edityMember/edityMember";
 
 interface ClubPageClientProps {
   units: Prisma.UnitGetPayload<{
@@ -17,7 +22,7 @@ interface ClubPageClientProps {
   }>[];
   users: User[];
   club: Club;
-  members: Member[]
+  members: Member[];
   user: User;
 }
 
@@ -644,7 +649,14 @@ export default function ClubPageClient({
           />
         </div>
       </div>
-      <CreateMember open={openMember} setOpen={setOpenMember} users={users} members={members} user={user} units={units} />
+      <EdityMember
+        open={openMember}
+        setOpen={setOpenMember}
+        users={users}
+        members={members}
+        user={user}
+        units={units}
+      />
       <div className="flex justify-center items-center pt-10">
         <CardUnit units={units} />
       </div>

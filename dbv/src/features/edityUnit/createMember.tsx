@@ -43,7 +43,7 @@ import {
 import imageCompression from "browser-image-compression";
 import { updateUserAvatar } from "@/shared/lib/updateImageUser";
 
-interface CreateMemberProps {
+interface EdityMemberProps {
   open: boolean;
   setOpen: (open: boolean) => void;
   users: User[];
@@ -54,14 +54,14 @@ interface CreateMemberProps {
   }>[];
 }
 
-export default function CreateMember({
+export default function EdityMember({
   open,
   setOpen,
   users,
   members,
   user,
   units,
-}: CreateMemberProps) {
+}: EdityMemberProps) {
   const [selectedUser, setSelectedUser] = useState("");
   const [openActiveMember, setOpenActiveMember] = useState(false);
   const [selectedMember, setSelectedMember] = useState<Member | null>(null);
@@ -110,12 +110,9 @@ export default function CreateMember({
       }
     } catch (error) {
       console.error("Erro ao fazer upload:", error);
-      console.log("Erro ao fazer upload:", error);
       toast.error("Erro ao atualizar avatar. Tente novamente.");
     } finally {
       setUploading(false);
-      console.log("Upload finalizado", imagePreview);
-      console.log("Imagem usuario:", users.find((u) => u.id === selectedUser)?.image);
     }
   };
 
@@ -266,7 +263,6 @@ export default function CreateMember({
                     </SelectTrigger>
                     <SelectContent>
                       <SelectGroup>
-                        <SelectItem value="0">Admin Sistema</SelectItem>
                         <SelectItem value="1">Diretor(a)</SelectItem>
                         <SelectItem value="2">Secretario(a)</SelectItem>
                         <SelectItem value="3">Conselheiro(a)</SelectItem>
@@ -404,11 +400,11 @@ export default function CreateMember({
           </FieldGroup>
         </div>
         <DrawerFooter>
-          <Button onClick={handleSave} disabled={!selectedUser || loading}>
+          <Button onClick={handleSave} disabled={!selectedUser || loading || uploading}>
             {loading ? <Spinner /> : "Salvar"}
           </Button>
           <DrawerClose asChild>
-            <Button variant="outline" onClick={closedModal}>
+            <Button variant="outline" onClick={closedModal} disabled={loading || uploading}>
               Fechar
             </Button>
           </DrawerClose>

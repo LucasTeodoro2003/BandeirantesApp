@@ -31,7 +31,6 @@ export async function updateUserAvatar(formData: FormData) {
     if (currentUser?.image && currentUser.image.includes("supabase")) {
       try {
         const oldPath = currentUser.image.split("/").slice(-3).join("/");
-        console.log("Deletando imagem antiga em:", oldPath);
         await supabase.storage.from("DBV").remove([oldPath]);
       } catch (error) {
         console.warn("Não foi possível deletar imagem antiga:", error);
