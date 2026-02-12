@@ -50,11 +50,12 @@ export function LoginForm({
         },
         onSuccess: (ctx: any) => {
           router.push(`/${ctx.data?.user?.clubId}`)
+          toast.success("Sessão iniciada com sucesso!");
+          setLoading(false);
         }
         //callbacks
       },
     );
-    setLoading(false);
   };
 
   return (

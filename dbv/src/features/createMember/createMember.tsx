@@ -22,6 +22,7 @@ import {
 import {
   Field,
   FieldContent,
+  FieldDescription,
   FieldGroup,
   FieldLabel,
   FieldTitle,
@@ -34,6 +35,8 @@ import { Spinner } from "@/shared/components/ui/spinner";
 import { RadioGroup, RadioGroupItem } from "@/shared/components/ui/radio-group";
 import { RefreshCcwIcon } from "lucide-react";
 import updatePage from "@/shared/lib/updatePage";
+import { Input } from "@/shared/components/ui/input";
+import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/ui/avatar";
 
 interface CreateMemberProps {
   open: boolean;
@@ -66,6 +69,8 @@ export default function CreateMember({
   );
   const [isRotating, setIsRotating] = useState(false);
   const [occupation, setOccupation] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState(users.find((u)=>u.id === selectedUser)?.image || "");
+  const [uploading, setUploading] = useState(false);
 
   const usersWithMembership = users.filter((u) =>
     members.some((m) => m.userId === u.id),
@@ -127,6 +132,15 @@ export default function CreateMember({
       console.error("Erro ao atualizar a página:", erro);
       setIsRotating(false);
     }
+  };
+
+  const getInitials = (name: string) => {
+    const parts = name?.split(" ") || [];
+    return (parts[0]?.[0] || "") + (parts[1]?.[0] || "");
+  };
+
+  const handleAvatarClick = () => {
+    document.getElementById("avatar-upload")?.click();
   };
 
   return (
@@ -237,33 +251,72 @@ export default function CreateMember({
               <FieldLabel>Opções</FieldLabel>
               <FieldContent>
                 {selectedUser && activeMember === true ? (
-                  <RadioGroup
-                    value={unitSelect || ""}
-                    onValueChange={(value) => {
-                      setUnitSelect(value);
-                    }}
-                  >
-                    <FieldLabel>
-                      <Field orientation="horizontal" className="">
-                        <FieldContent>
-                          <FieldTitle className="text-red-500">
-                            Nenhuma
-                          </FieldTitle>
-                        </FieldContent>
-                        <RadioGroupItem value={""} id={""} />
-                      </Field>
-                    </FieldLabel>
-                    {units.map((unit) => (
-                      <FieldLabel htmlFor={unit.id} key={unit.id}>
+                  <>
+                    <RadioGroup
+                      value={unitSelect || ""}
+                      onValueChange={(value) => {
+                        setUnitSelect(value);
+                      }}
+                    >
+                      <FieldLabel>
                         <Field orientation="horizontal" className="">
                           <FieldContent>
-                            <FieldTitle>{unit.name}</FieldTitle>
+                            <FieldTitle className="text-red-500">
+                              Nenhuma
+                            </FieldTitle>
                           </FieldContent>
-                          <RadioGroupItem value={unit.id} id={unit.id} />
+                          <RadioGroupItem value={""} id={""} />
                         </Field>
                       </FieldLabel>
-                    ))}
-                  </RadioGroup>
+                      {units.map((unit) => (
+                        <FieldLabel htmlFor={unit.id} key={unit.id}>
+                          <Field orientation="horizontal" className="">
+                            <FieldContent>
+                              <FieldTitle>{unit.name}</FieldTitle>
+                            </FieldContent>
+                            <RadioGroupItem value={unit.id} id={unit.id} />
+                          </Field>
+                        </FieldLabel>
+                      ))}
+                    </RadioGroup>
+                    <FieldGroup className="w-full max-w-xs mt-4">
+                      <Field>
+                        <FieldLabel>Nome Usuario</FieldLabel>
+                        <div className="flex items-center gap-4">
+
+                          <Input id="username" type="text" className="flex-1" />
+                          <div className="relative">
+                            <Avatar
+                              className="cursor-pointer hover:opacity-80 transition-opacity w-12 h-12"
+                              onClick={handleAvatarClick}
+                            >
+                              <AvatarImage
+                                src={avatarUrl}
+                                alt={user?.name || "User"}
+                              />
+                              <AvatarFallback>
+                                {getInitials(user?.name || "UN")}
+                              </AvatarFallback>
+                            </Avatar>
+
+                            {uploading && (
+                              <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full">
+                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                              </div>
+                            )}
+                          </div>
+
+                          <input
+                            id="avatar-upload"
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={handleFileChange}
+                          />
+                        </div>
+                      </Field>
+                    </FieldGroup>
+                  </>
                 ) : selectedUser && activeMember === false ? (
                   <>
                     {selectedMember === null ? (
