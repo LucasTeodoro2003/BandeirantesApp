@@ -14,7 +14,7 @@ import { Suspense, useState } from "react";
 import { SkeletonCard } from "../skeletons/skeletonCard";
 import { Separator } from "@/shared/components/ui/separator";
 import { useRouter } from "next/navigation";
-import { DoorOpenIcon } from "lucide-react";
+import { DoorOpenIcon, PencilRulerIcon, ShieldPlusIcon } from "lucide-react";
 import { Spinner } from "@/shared/components/ui/spinner";
 
 interface CardUnitProps {
@@ -55,31 +55,37 @@ export function CardUnit({ units }: CardUnitProps) {
               </CardAction>
               <Separator className="my-4 -mt-1" />
             </CardHeader>
-            <CardFooter className="flex flex-col -mt-8 flex-1">
+            <CardFooter className="flex flex-col -mt-8 flex-1 ">
               <div className="flex-1">
                 {u.members
                   .filter((m) => m.permission < 3)
                   .map((m) => (
                     <div
                       key={m.id}
-                      className="text-sm flex justify-between gap-4"
+                      className="text-sm flex justify-between items-center mb-0.5"
                     >
-                      <div className="pt-2">
+                      <div>
                         {m.user.name.split(" ")[0] +
                           " " +
-                          (m.user.name.split(" ")[1] || "")}
+                          (m.user.name.split(" ")[1]?.[0] || "")}
                       </div>
-                      <div className="">
-                        <Badge
-                          className={
-                            m.permission === 1
-                              ? "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300"
-                              : "bg-sky-50 text-sky-700 dark:bg-sky-950 dark:text-sky-300"
-                          }
-                        >
-                          {m.permission === 1 ? "Capitão" : "Secretário"}
-                        </Badge>
-                      </div>
+                      <Badge
+                        className={
+                          m.permission === 1
+                            ? "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300"
+                            : "bg-sky-50 text-sky-700 dark:bg-sky-950 dark:text-sky-300"
+                        }
+                      >
+                        {m.permission === 1 ? (
+                          <>
+                            <ShieldPlusIcon /> Capitão
+                          </>
+                        ) : (
+                          <>
+                            <PencilRulerIcon /> Secretário
+                          </>
+                        )}
+                      </Badge>
                     </div>
                   ))}
               </div>

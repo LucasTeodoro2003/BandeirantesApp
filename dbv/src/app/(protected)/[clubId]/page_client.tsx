@@ -630,11 +630,8 @@ export default function ClubPageClient({
             <img
               src={club.image || "/bandeirantes.png"}
               alt={club.name}
-              className="w-8 sm:w-12 h-auto object-cover"
+              className="w-12 sm:w-16 h-auto object-cover"
             />
-          </div>
-          <div className="text-xl sm:text-3xl dark:text-white text-black font-medium ml-1.5">
-            {club.name}
           </div>
         </div>
         <div className="flex justify-end items-center mr-4">

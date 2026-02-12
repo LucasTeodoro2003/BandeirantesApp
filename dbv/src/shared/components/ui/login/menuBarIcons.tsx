@@ -15,7 +15,7 @@ import {
   LogOutIcon,
   TrashIcon,
   User2Icon,
-  UserRoundPlusIcon,
+  UserCogIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -55,7 +55,7 @@ export function MenubarIcons({ setOpenMember }: MenubarIconsProps) {
               Unidades
             </MenubarItem>
             <MenubarItem onClick={() => setOpenMember(true)}>
-              <UserRoundPlusIcon />
+              <UserCogIcon />
               Membros
             </MenubarItem>
             <MenubarItem>

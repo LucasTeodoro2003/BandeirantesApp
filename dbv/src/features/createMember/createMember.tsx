@@ -136,7 +136,7 @@ export default function CreateMember({
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle className="flex justify-between items-center">
-            <div>Criar Membros</div>
+            <div>Gerenciar Membros</div>
             <div>
               <Button
                 variant="ghost"
