@@ -23,10 +23,6 @@ export async function updateUserAvatar(formData: FormData) {
 
     const userId = formData.get("userId") as string;
 
-    if (session.user.id !== userId) {
-      throw new Error("Não autorizado");
-    }
-
     const currentUser = await prisma.user.findUnique({
       where: { id: userId },
       select: { image: true, name: true },
