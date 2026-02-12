@@ -19,7 +19,6 @@ import {
   FieldTitle,
 } from "@/shared/components/ui/field";
 import { toast } from "sonner";
-import { Toaster } from "@/shared/components/ui/sonner";
 import SelectClub from "@/shared/lib/selectClub";
 
 interface WaitingPageClientProps {
@@ -67,7 +66,6 @@ export default function WaitingPageClient({
 
   return (
     <>
-      <Toaster richColors position="top-center" />
       {user.clubId && (
         <div className="flex min-h-screen flex-col justify-center items-center p-4 text-center gap-6">
           <div className="">

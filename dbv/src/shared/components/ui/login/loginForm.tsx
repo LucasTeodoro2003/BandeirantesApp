@@ -17,7 +17,6 @@ import {
 import { Input } from "@/shared/components/ui/input";
 import { authClient } from "@/shared/lib/auth-client";
 import { useState } from "react";
-import { Toaster } from "../sonner";
 import { toast } from "sonner";
 import { Spinner } from "../spinner";
 import { useRouter } from "next/navigation";
@@ -60,7 +59,6 @@ export function LoginForm({
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <Toaster position="top-center" richColors />
       <Card>
         <CardHeader className="text-center">
           <CardTitle className="text-xl">Welcome back</CardTitle>

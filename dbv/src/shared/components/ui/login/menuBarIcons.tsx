@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import {
   Menubar,
   MenubarContent,
@@ -18,22 +18,36 @@ import {
   UserCogIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Spinner } from "../spinner";
+import { toast } from "sonner";
 
 interface MenubarIconsProps {
   setOpenMember: (open: boolean) => void;
 }
 
 export function MenubarIcons({ setOpenMember }: MenubarIconsProps) {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+
   const handleSignOut = async () => {
-    const router = useRouter();
-    await authClient.signOut();
-    router.replace("/");
+    setLoading(true);
+    try{
+      await authClient.signOut();
+      toast.success("Deslogado com sucesso!")
+      router.replace("/");
+      setLoading(false);
+    }catch(error){
+      console.error("Error ao sair:", error);
+      setLoading(false);
+      toast.error("Erro ao sair. Tente novamente.");
+    }
   };
 
   return (
     <Menubar className="w-min">
       <MenubarMenu>
-        <MenubarTrigger>Perfil</MenubarTrigger>
+        <MenubarTrigger>{loading ? <Spinner /> : "Perfil"}</MenubarTrigger>
         <MenubarContent>
           <MenubarItem>
             <User2Icon />

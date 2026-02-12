@@ -28,7 +28,6 @@ import {
 } from "../../shared/components/ui/field";
 import { Switch } from "../../shared/components/ui/switch";
 import { Member, Prisma, User } from "../../../generated/prisma/client";
-import { Toaster } from "../../shared/components/ui/sonner";
 import { toast } from "sonner";
 import UpdateOrCreateMember from "@/shared/lib/member";
 import { Spinner } from "@/shared/components/ui/spinner";
@@ -132,7 +131,6 @@ export default function CreateMember({
 
   return (
     <Drawer direction="right" open={open} setBackgroundColorOnScale={false}>
-      <Toaster richColors position="top-center" />
       <DrawerContent>
         <DrawerHeader>
           <DrawerTitle className="flex justify-between items-center">
