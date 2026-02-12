@@ -28,6 +28,7 @@ export default async function UpdateOrCreateMember(member: FormData) {
         data: {
           permission: parseInt(member.get("occupation")?.toString() || "5"),
           clubId: member.get("clubId")?.toString() || "",
+          name: member.get("nameUser")?.toString() || "",
         },
       });
       revalidatePath("/");

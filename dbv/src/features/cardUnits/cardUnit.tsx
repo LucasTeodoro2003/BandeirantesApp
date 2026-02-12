@@ -59,6 +59,7 @@ export function CardUnit({ units }: CardUnitProps) {
               <div className="flex-1">
                 {u.members
                   .filter((m) => m.permission < 3)
+                  .sort((a, b) => a.permission - b.permission)
                   .map((m) => (
                     <div
                       key={m.id}

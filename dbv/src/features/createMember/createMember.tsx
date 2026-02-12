@@ -22,7 +22,6 @@ import {
 import {
   Field,
   FieldContent,
-  FieldDescription,
   FieldGroup,
   FieldLabel,
   FieldTitle,
@@ -33,10 +32,16 @@ import { toast } from "sonner";
 import UpdateOrCreateMember from "@/shared/lib/member";
 import { Spinner } from "@/shared/components/ui/spinner";
 import { RadioGroup, RadioGroupItem } from "@/shared/components/ui/radio-group";
-import { RefreshCcwIcon } from "lucide-react";
+import { CameraIcon, RefreshCcwIcon } from "lucide-react";
 import updatePage from "@/shared/lib/updatePage";
 import { Input } from "@/shared/components/ui/input";
-import { Avatar, AvatarFallback, AvatarImage } from "@/shared/components/ui/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/shared/components/ui/avatar";
+import imageCompression from "browser-image-compression";
+import { updateUserAvatar } from "@/shared/lib/updateImageUser";
 
 interface CreateMemberProps {
   open: boolean;
@@ -69,8 +74,50 @@ export default function CreateMember({
   );
   const [isRotating, setIsRotating] = useState(false);
   const [occupation, setOccupation] = useState("");
-  const [avatarUrl, setAvatarUrl] = useState(users.find((u)=>u.id === selectedUser)?.image || "");
+  const [imagePreview, setImagePreview] = useState<string>(
+    users.find((u) => u.id === selectedUser)?.image || "",
+  );
+  const [nameUser, setNameUser] = useState(
+    users.find((u) => u.id === selectedUser)?.name || "",
+  );
   const [uploading, setUploading] = useState(false);
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const options = {
+        maxSizeMB: 0.9,
+        maxWidthOrHeight: 1024,
+        useWebWorker: true,
+      };
+      const compressedFile = await imageCompression(file, options);
+      if (imagePreview && !imagePreview.startsWith("https")) {
+        URL.revokeObjectURL(imagePreview);
+      }
+      const preview = URL.createObjectURL(compressedFile);
+      setImagePreview(preview);
+      const formData = new FormData();
+      formData.append("image", compressedFile);
+      formData.append("userId", user.id);
+      const result = await updateUserAvatar(formData);
+      if (result.success && result.url) {
+        setImagePreview(result.url);
+        toast.success("Avatar atualizado com sucesso!");
+      } else {
+        throw new Error("Falha ao atualizar avatar");
+      }
+    } catch (error) {
+      console.error("Erro ao fazer upload:", error);
+      console.log("Erro ao fazer upload:", error);
+      toast.error("Erro ao atualizar avatar. Tente novamente.");
+    } finally {
+      setUploading(false);
+      console.log("Upload finalizado", imagePreview);
+      console.log("Imagem usuario:", users.find((u) => u.id === selectedUser)?.image);
+    }
+  };
 
   const usersWithMembership = users.filter((u) =>
     members.some((m) => m.userId === u.id),
@@ -89,6 +136,8 @@ export default function CreateMember({
     setOccupation(
       users.find((u) => u.id === userId)?.permission.toString() || "",
     );
+    setNameUser(users.find((u) => u.id === userId)?.name || "");
+    setImagePreview(users.find((u) => u.id === userId)?.image || "");
   };
 
   const closedModal = () => {
@@ -111,6 +160,7 @@ export default function CreateMember({
       formMember.append("clubId", user.clubId || "");
       formMember.append("unitId", unitSelect || "");
       formMember.append("occupation", occupation);
+      formMember.append("nameUser", nameUser);
       await UpdateOrCreateMember(formMember);
       toast.success("Membro salvo com sucesso!");
     } catch (error) {
@@ -281,39 +331,54 @@ export default function CreateMember({
                     </RadioGroup>
                     <FieldGroup className="w-full max-w-xs mt-4">
                       <Field>
-                        <FieldLabel>Nome Usuario</FieldLabel>
-                        <div className="flex items-center gap-4">
+                        <FieldLabel>
+                          <div className="flex items-center justify-between w-full">
+                            <div>Usuario</div>
+                            <div>
+                              <div className="flex items-center gap-4">
+                                <div className="relative group">
+                                  <Avatar
+                                    className="cursor-pointer w-12 h-12"
+                                    onClick={handleAvatarClick}
+                                  >
+                                    <AvatarImage
+                                      src={imagePreview}
+                                      alt={nameUser || "User"}
+                                      className="object-cover"
+                                    />
+                                    <AvatarFallback>
+                                      {getInitials(nameUser || "SN")}
+                                    </AvatarFallback>
+                                  </Avatar>
 
-                          <Input id="username" type="text" className="flex-1" />
-                          <div className="relative">
-                            <Avatar
-                              className="cursor-pointer hover:opacity-80 transition-opacity w-12 h-12"
-                              onClick={handleAvatarClick}
-                            >
-                              <AvatarImage
-                                src={avatarUrl}
-                                alt={user?.name || "User"}
-                              />
-                              <AvatarFallback>
-                                {getInitials(user?.name || "UN")}
-                              </AvatarFallback>
-                            </Avatar>
+                                  <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                                    {uploading ? (
+                                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                    ) : (
+                                      <CameraIcon className="w-5 h-5 text-white" />
+                                    )}
+                                  </div>
+                                </div>
 
-                            {uploading && (
-                              <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-full">
-                                <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                <input
+                                  id="avatar-upload"
+                                  type="file"
+                                  accept="image/*"
+                                  className="hidden"
+                                  onChange={handleFileChange}
+                                  disabled={uploading}
+                                />
                               </div>
-                            )}
+                            </div>
                           </div>
-
-                          <input
-                            id="avatar-upload"
-                            type="file"
-                            accept="image/*"
-                            className="hidden"
-                            onChange={handleFileChange}
-                          />
-                        </div>
+                        </FieldLabel>
+                        <Input
+                          id="username"
+                          type="text"
+                          className="h-10"
+                          value={nameUser}
+                          onChange={(e) => setNameUser(e.target.value)}
+                        />
                       </Field>
                     </FieldGroup>
                   </>
